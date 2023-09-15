@@ -143,5 +143,5 @@ function whichSync (commands: [string, ...string[]], opts?: Opts): {path: string
 }
 
 export {
-    which 
+    whichSync 
 }
