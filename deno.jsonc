@@ -1,0 +1,14 @@
+{
+    "tasks": {
+      "dev": "deno run --watch main.ts",
+      "help": "deno run --allow-env --allow-read --allow-sys main.ts help",
+      "create_timezone": "deno run --allow-write tasks/generator/create_timezone.ts",
+      "create_error": "deno run --allow-read --allow-write tasks/generator/create_error.ts",
+      "compile": "deno compile tasks/generator/create_error.ts --output out/aaa",
+      "aaa": "deno run tasks/process.ts aaa bbb"
+    },
+    "imports": {
+      "path/": "https://deno.land/std@0.201.0/path/",
+      "fs/": "https://deno.land/std@0.201.0/fs/"
+    }
+}
