@@ -1,10 +1,10 @@
 import { assertEquals,  assertIsError  } from "https://deno.land/std@0.201.0/assert/mod.ts";
-import { which } from './which.ts';
+import { whichSync } from './which.ts';
 
 // which は一つのコマンドを複数の引数を持てる
 Deno.test(function singleTest() {
   
-  const result = which(["cat"]);
+  const result = whichSync(["cat"]);
   assertEquals(result.path[0], "/usr/bin/cat");
   // 成功したのでundefined
   assertEquals(result.err, undefined);
@@ -13,7 +13,7 @@ Deno.test(function singleTest() {
 // 存在しないコマンドを与えるとエラーを引数として返す
 Deno.test(function singleNotFoundTest() {
   
-  const result = which(["Notfound"]);
+  const result = whichSync(["Notfound"]);
 
   assertEquals(result.path.length, 0);
   assertIsError(result.err)
@@ -22,7 +22,7 @@ Deno.test(function singleNotFoundTest() {
 // which は複数のコマンドを複数の引数を持てる
 Deno.test(function multiTest() {
   
-  const result = which(["cat", "ls", "env"]);
+  const result = whichSync(["cat", "ls", "env"]);
   assertEquals(result.path[0], "/usr/bin/cat");
   assertEquals(result.path[1], "/usr/bin/ls");
   assertEquals(result.path[2], "/usr/bin/env");
@@ -35,12 +35,12 @@ Deno.test(function multiTest() {
 // 一つでも見つからないコマンドを発見したら、エラー
 Deno.test(function multiNotFoundTest() {
   
-  const result = which(["cat", "NotFound"]);
+  const result = whichSync(["cat", "NotFound"]);
   assertEquals(result.path[0], "/usr/bin/cat");
   assertEquals(result.path.length, 1);
   assertIsError(result.err);
 
-  const result2 = which(["cat", "ls", "NotFound"]);
+  const result2 = whichSync(["cat", "ls", "NotFound"]);
   assertEquals(result2.path[0], "/usr/bin/cat");
   assertEquals(result2.path[1], "/usr/bin/ls");
   assertEquals(result2.path.length, 2);

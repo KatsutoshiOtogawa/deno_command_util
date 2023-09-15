@@ -69,7 +69,7 @@ function isExecutable ():boolean {
  * @returns {Promise<{path: string[], err?: Error}>}
  * 
  */
-function which (commands: [string, ...string[]], opts?: Opts): {path: string[], err?: Error} {
+function whichSync (commands: [string, ...string[]], opts?: Opts): {path: string[], err?: Error} {
 
     let _all = false;
     let _read_alias = false;
