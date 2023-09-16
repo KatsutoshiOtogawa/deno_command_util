@@ -57,7 +57,7 @@ function isExecutable ():boolean {
     return true;
 }
 
-async function getPasswd (key?: string, opts?: Opts): Promise<{ entry: string[]; err?: Error|undefined; }> {
+async function _getPasswd (key?: string, opts?: Opts): Promise<{ entry: string[]; err?: Error|undefined; }> {
 
     let _all = false;
     let _read_alias = false;
@@ -100,7 +100,7 @@ async function getPasswd (key?: string, opts?: Opts): Promise<{ entry: string[];
     return {entry, err}
 }
 
-async function getGroup (key?: string, opts?: Opts): Promise<{ entry: string[]; err?: Error|undefined; }> {
+async function _getGroup (key?: string, opts?: Opts): Promise<{ entry: string[]; err?: Error|undefined; }> {
 
     let _all = false;
     let _read_alias = false;
@@ -178,10 +178,10 @@ function getent (database: Database, key?: string, opts?: Opts): Promise<{ entry
 
     switch (database) {
         case "passwd":
-            entris = getPasswd(key, opts);
+            entris = _getPasswd(key, opts);
             break;
         case "group":
-            entris = getGroup(key, opts);
+            entris = _getGroup(key, opts);
             break;
         default:
             throw Error("Unimplemented");
