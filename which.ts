@@ -1,32 +1,10 @@
 
-import { globToRegExp, extname,join } from 'path/mod.ts';
-import { walk, exists, existsSync } from 'fs/mod.ts';
+import { join } from 'path/mod.ts';
+import { existsSync } from 'fs/mod.ts';
+import { envSeparator } from './_runtime.ts';
 
 // const pathExtText = environment.env("PATHEXT") ?? ".EXE;.CMD;.BAT;.COM";
   
-/** runtime 環境下でwindowsかどうかの確認に使う。 */
-const isWindows = Deno.build.os === "windows";
-
-/**
- * 
- * @returns {":" | ";"} runtime環境下のセパレーターを返します。
- */
-function envSeparator (): ":" | ";" {
-    if (isWindows) {
-        return ";";
-    }
-
-    return ":";
-}
-
-class NotSupportedPlatform extends Error {
-    
-}
-
-class NotSupportedVersion extends Error {
-
-}
-
 // Deno.version.deno
 
 // support

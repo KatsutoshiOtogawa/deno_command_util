@@ -10,6 +10,15 @@ Deno.test(function singleTest() {
   assertEquals(result.err, undefined);
 });
 
+// whichはパスの中で初めて見つけたものを返す。
+Deno.test(function single2Test() {
+  
+  const result = whichSync(["cat"]);
+  assertEquals(result.path[0], "/usr/bin/cat");
+  // 成功したのでundefined
+  assertEquals(result.err, undefined);
+});
+
 // 存在しないコマンドを与えるとエラーを引数として返す
 Deno.test(function singleNotFoundTest() {
   
