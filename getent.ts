@@ -1,3 +1,4 @@
+import { parse } from 'flags/mod.ts';
 import { join } from 'path/mod.ts';
 import { existsSync, exists } from 'fs/mod.ts';
 import { readLines } from 'io/mod.ts';
@@ -13,22 +14,33 @@ import { readLines } from 'io/mod.ts';
 
 // 3      Enumeration not supported on this database.
 
-type Database =
-  "ahosts"   |
-  "ahostsv4" |
-  "ahostsv6" |
-  "aliases" |
-  "ethers" |
-  "group" |
-  "gshadow" |
-  "hosts" |
-  "initgroups" |
-  "netgroup" |
-  "networks" |
-  "passwd" |
-  "protocols" |
-  "services" |
-  "shadow";
+const _Database = [
+  "ahosts",  
+  "ahostsv4" ,
+  "ahostsv6" ,
+  "aliases" ,
+  "ethers" ,
+  "group" ,
+  "gshadow" ,
+  "hosts" ,
+  "initgroups" ,
+  "netgroup" ,
+  "networks" ,
+  "passwd" ,
+  "protocols" ,
+  "services" ,
+  "shadow"
+] as const;
+
+type Database = typeof _Database[number];
+
+/**
+ * Type 
+ * @param {string} database you want to check string
+ */
+function database_type_guard(database: string): database is Database{
+    return _Database.includes(database as Database);
+}
 
 /** コマンドが一つでもなかったら作成する */
 // class  extends Error {
@@ -46,7 +58,7 @@ function is_support_version (_deno_version: string): boolean {
 interface Opts {
     all?: boolean,
     read_alias?: boolean
-};
+}
 
 
 // 後で実装
@@ -145,7 +157,8 @@ async function _getGroup (key?: string, opts?: Opts): Promise<{ entry: string[];
 
 /**
  * 
- * @param  {[string, ...string[]]} commands you want to search command. command multi
+ * @param  {[string, ...string[]]} database you want to search command. command multi
+ * @param  {[string]} key you want to search command. command multi
  * @param {[Opts]} opts command option
  * @returns {Promise<{path: string[], err?: Error}>}
  * 
@@ -180,9 +193,26 @@ function getent (database: Database, key?: string, opts?: Opts): Promise<{ entry
         case "passwd":
             entris = _getPasswd(key, opts);
             break;
+
         case "group":
             entris = _getGroup(key, opts);
             break;
+
+        case "ahosts":
+        case 'ahostsv4':
+        case 'ahostsv6':
+        case 'aliases':
+        case 'ethers':
+        case 'gshadow':
+        case 'hosts':
+        case 'initgroups':
+        case 'netgroup':
+        case 'networks':
+        case 'protocols':
+        case 'services':
+        case 'shadow':
+            throw Error("Unimplemented");
+
         default:
             throw Error("Unimplemented");
     }
@@ -191,5 +221,42 @@ function getent (database: Database, key?: string, opts?: Opts): Promise<{ entry
 }
 
 export {
-    getent
+    type Database,
+    getent,
+    database_type_guard
+}
+
+/** main function */
+/** 手動チェック用 */
+if (import.meta.main) {
+    
+    const flags = parse(Deno.args, {
+        boolean: ["all", "read_alias"],
+    });
+    
+    const commands: string[] = [];
+
+    for (const arg of Deno.args) {
+        // -か--が出るまではstring
+        if (arg.startsWith('-') || arg.startsWith('-')) {
+            break;
+        }
+        commands.push(arg)
+    }
+
+    if (commands.length === 0) {
+        throw new Error("command assign");
+    }
+
+    if (!database_type_guard(commands[0])) {
+        throw new Error("This is not database.");
+    }
+
+    const database = commands[0] as Database;
+
+    const key = commands[1];
+
+    const result = await getent(database, key, flags);
+
+    console.log(result);
 }
