@@ -1,35 +1,31 @@
-
+import { parse } from 'flags/mod.ts';
 import { join } from 'path/mod.ts';
 import { existsSync } from 'fs/mod.ts';
 import { envSeparator } from './_runtime.ts';
 
-// const pathExtText = environment.env("PATHEXT") ?? ".EXE;.CMD;.BAT;.COM";
   
-// Deno.version.deno
-
 // support
 const support_version = [
     "1.36.3", 
     "1.36.4"
 ];
 
+
+
 /** コマンドが一つでもなかったら作成する */
 // class  extends Error {
     
 // }
 
-function is_support_version (_deno_version: string): boolean {
-
-    return true;
-
+function is_support_version (deno_version: string): boolean {
     // 今は動いているが今後動作が変わったら、下を使う。
-    // return support_version.includes(deno_version);
+    return support_version.includes(deno_version);
 }
 
 interface Opts {
     all?: boolean,
     read_alias?: boolean
-};
+}
 
 
 // 後で実装
@@ -122,4 +118,30 @@ function whichSync (commands: [string, ...string[]], opts?: Opts): {path: string
 
 export {
     whichSync 
+}
+
+/** main function */
+/** 手動チェック用 */
+if (import.meta.main) {
+    
+    const flags = parse(Deno.args, {
+        boolean: ["all", "read_alias"],
+    });
+    
+    const commands: string[] = [];
+
+    for (const arg of Deno.args) {
+        // -か--が出るまではstring
+        if (arg.startsWith('-') || arg.startsWith('--')) {
+            break;
+        }
+        commands.push(arg)
+    }
+
+    if (commands.length === 0) {
+        throw new Error("command assign");
+    }
+    const result = whichSync(commands as [string, ...string[]], flags);
+
+    console.log(result);
 }

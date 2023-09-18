@@ -1,7 +1,7 @@
 import { assertEquals,  assertIsError  } from "https://deno.land/std@0.201.0/assert/mod.ts";
 import { whichSync } from './which.ts';
 
-// which は一つのコマンドを複数の引数を持てる
+// whichは探したコマンドが見つかるとフルパスで返す
 Deno.test(function singleTest() {
   
   const result = whichSync(["cat"]);
@@ -10,7 +10,7 @@ Deno.test(function singleTest() {
   assertEquals(result.err, undefined);
 });
 
-// whichはパスの中で初めて見つけたものを返す。
+// whichは環境変数PATHの中に存在しないパスが含まれていてもエラーにならない
 Deno.test(function single2Test() {
   
   const result = whichSync(["cat"]);
