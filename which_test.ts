@@ -6,8 +6,8 @@ Deno.test(function singleTest() {
   
   const result = whichSync(["cat"]);
   assertEquals(result.path[0], "/usr/bin/cat");
-  // 成功したのでundefined
-  assertEquals(result.err, undefined);
+  // 成功したので空の配列
+  assertEquals(result.errs, []);
 });
 
 // whichは環境変数PATHの中に存在しないパスが含まれていてもエラーにならない
@@ -15,8 +15,8 @@ Deno.test(function single2Test() {
   
   const result = whichSync(["cat"]);
   assertEquals(result.path[0], "/usr/bin/cat");
-  // 成功したのでundefined
-  assertEquals(result.err, undefined);
+  // 成功したので空の配列
+  assertEquals(result.errs, []);
 });
 
 // 存在しないコマンドを与えるとエラーを引数として返す
@@ -25,7 +25,7 @@ Deno.test(function singleNotFoundTest() {
   const result = whichSync(["Notfound"]);
 
   assertEquals(result.path.length, 0);
-  assertIsError(result.err)
+  assertIsError(result.errs[0])
 });
 
 // which は複数のコマンドを複数の引数を持てる
@@ -37,8 +37,8 @@ Deno.test(function multiTest() {
   assertEquals(result.path[2], "/usr/bin/env");
   assertEquals(result.path.length, 3);
 
-  // 成功したのでundefined
-  assertEquals(result.err, undefined);
+  // 成功したので空の配列
+  assertEquals(result.errs, []);
 });
 
 // 一つでも見つからないコマンドを発見したら、エラー
@@ -47,13 +47,21 @@ Deno.test(function multiNotFoundTest() {
   const result = whichSync(["cat", "NotFound"]);
   assertEquals(result.path[0], "/usr/bin/cat");
   assertEquals(result.path.length, 1);
-  assertIsError(result.err);
+  assertIsError(result.errs[0])
 
   const result2 = whichSync(["cat", "ls", "NotFound"]);
   assertEquals(result2.path[0], "/usr/bin/cat");
   assertEquals(result2.path[1], "/usr/bin/ls");
   assertEquals(result2.path.length, 2);
-  assertIsError(result2.err);
+  assertIsError(result2.errs[0])
+
+  // 存在しなかった分だけエラー
+  const result3 = whichSync(["cat", "NotFound", "NotFound2"]);
+  assertEquals(result3.path[0], "/usr/bin/cat");
+  assertEquals(result3.path.length, 1);
+  assertEquals(result3.errs.length, 2);
+  assertIsError(result3.errs[0])
+  assertIsError(result3.errs[1])
 });
 
 // setfacl -R -m u:vscode:r
