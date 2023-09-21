@@ -5,7 +5,7 @@ import { whichSync } from './which.ts';
 Deno.test(function singleTest() {
   
   const result = whichSync(["cat"]);
-  assertEquals(result.path[0], "/usr/bin/cat");
+  assertEquals(result.path[0], "/bin/cat");
   // 成功したので空の配列
   assertEquals(result.errs, []);
 });
@@ -14,7 +14,7 @@ Deno.test(function singleTest() {
 Deno.test(function single2Test() {
   
   const result = whichSync(["cat"]);
-  assertEquals(result.path[0], "/usr/bin/cat");
+  assertEquals(result.path[0], "/bin/cat");
   // 成功したので空の配列
   assertEquals(result.errs, []);
 });
@@ -32,8 +32,8 @@ Deno.test(function singleNotFoundTest() {
 Deno.test(function multiTest() {
   
   const result = whichSync(["cat", "ls", "env"]);
-  assertEquals(result.path[0], "/usr/bin/cat");
-  assertEquals(result.path[1], "/usr/bin/ls");
+  assertEquals(result.path[0], "/bin/cat");
+  assertEquals(result.path[1], "/bin/ls");
   assertEquals(result.path[2], "/usr/bin/env");
   assertEquals(result.path.length, 3);
 
@@ -45,13 +45,13 @@ Deno.test(function multiTest() {
 Deno.test(function multiNotFoundTest() {
   
   const result = whichSync(["cat", "NotFound"]);
-  assertEquals(result.path[0], "/usr/bin/cat");
+  assertEquals(result.path[0], "/bin/cat");
   assertEquals(result.path.length, 1);
   assertIsError(result.errs[0])
 
   const result2 = whichSync(["cat", "ls", "NotFound"]);
-  assertEquals(result2.path[0], "/usr/bin/cat");
-  assertEquals(result2.path[1], "/usr/bin/ls");
+  assertEquals(result2.path[0], "/bin/cat");
+  assertEquals(result2.path[1], "/bin/ls");
   assertEquals(result2.path.length, 2);
   assertIsError(result2.errs[0])
 
