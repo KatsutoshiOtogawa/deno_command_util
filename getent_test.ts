@@ -1,4 +1,4 @@
-import { assertEquals,  assertIsError  } from "https://deno.land/std@0.201.0/assert/mod.ts";
+import { assertEquals,  assertIsError  } from "assert/mod.ts";
 import { getent } from './getent.ts';
 import { readLines } from 'io/mod.ts';
 

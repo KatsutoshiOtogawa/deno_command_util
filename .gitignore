@@ -2,3 +2,6 @@
 .idea
 .vscode/settings.json
 .vim
+
+out/*
+!/out/.gitignore

@@ -40,7 +40,7 @@ function isExecutable ():boolean {
  * 
  * @param  {[string, ...string[]]} commands you want to search command. command multi
  * @param {[Opts]} opts command option
- * @returns {Promise<{path: string[], err: Error[]}>}
+ * @returns {Promise<{path: string[], errs: Error[]}>}
  * @throws {Deno.errors.PermissionDenied}
  * 
  */

@@ -33,7 +33,8 @@
 			],
 			"settings": {
 				"deno.enable": true,
-				"deno.path": "/home/vscode/.deno/bin/deno"
+				"deno.path": "/deno/bin/deno",
+				"editor.defaultFormatter": "denoland.vscode-deno"
 			}
 		}
 	}
